@@ -43,6 +43,8 @@ async function fetchSubmissions(url) {
 			if (currentPage > 1) {
 				pageUrl += `?limit=${perPage}&offset=${(perPage * (currentPage - 1))}`;
 			}
+
+			console.log('fetching ' + pageUrl);
 			
 			let page = await axios.get(pageUrl, {
 				headers: {
@@ -50,6 +52,7 @@ async function fetchSubmissions(url) {
 					Authorization: `Bearer ${APIKEY}`
 				}
 			});
+			console.log(page.data);
 
             // Accumulate data from this page
             allResponses = allResponses.concat(page.data.responses);
