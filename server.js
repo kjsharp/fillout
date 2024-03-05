@@ -12,12 +12,13 @@ app.get("/:formID/filteredResponses", async (request, response) => {
 
 	response.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
 	
+    let submissions = await fetchSubmissions(`${ENDPOINT}${formID}/submissions`);
+
 	if (request.query.filters) {
 		const queryString = request.query.filters;
 		filters = JSON.parse(decodeURIComponent(queryString));
 	}
-	
-    let submissions = await fetchSubmissions(`${ENDPOINT}${formID}/submissions`);
+
 	submissions = submissions.filter(response => {
 		return response.questions.every(filterResponses);
 	});
@@ -88,6 +89,10 @@ const filterResponses = (question, index, array) => {
 
 // compare two values by operator
 const compareValues = (value1, value2, operator) => {
+	// if these are numbers, force type
+	if (/^[0-9.]+$/.test(value1)) value1 = Number(value1);
+	if (/^[0-9.]+$/.test(value2)) value2 = Number(value2);
+	
     switch (operator) {
         case 'equals':
             return value1 === value2;
