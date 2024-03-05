@@ -9,6 +9,8 @@ let filters = [];
 
 app.get("/:formID/filteredResponses", async (request, response) => {
 	const { formID } = request.params;
+
+	response.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
 	
 	if (request.query.filters) {
 		const queryString = request.query.filters;
